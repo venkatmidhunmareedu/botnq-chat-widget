@@ -5,6 +5,10 @@
   "type": "module",
   "main": "./dist/botnq-chat-widget.js",
   "types": "./dist/main.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/venkatmidhunmareedu/botnq-chat-widget.git"
+  },
   "files": [
     "dist"
   ],
