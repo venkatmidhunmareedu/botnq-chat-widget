@@ -1,0 +1,12 @@
+lib/
+node_modules/
+public/
+src/
+index.html
+components.json
+vite.config.ts
+package.json
+package-lock.json
+pnpm-lock.yaml
+.env.*
+

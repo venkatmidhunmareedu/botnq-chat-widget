@@ -1,0 +1,2 @@
+overrides:
+  ai-support-bot-sdk: link:../../../.local/share/pnpm/global/5/node_modules/ai-support-bot-sdk
