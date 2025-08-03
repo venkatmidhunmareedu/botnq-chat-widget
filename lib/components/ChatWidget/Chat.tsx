@@ -1,9 +1,10 @@
 import { useChat } from '@ai-sdk/react';
 import { Input } from '../ui/input'; // Assuming shadcn Input component
 import { Button } from '../ui/button'; // Assuming shadcn Button component
-import { Card, CardContent, CardFooter } from '../ui/card'; // Assuming shadcn Card components
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card'; // Assuming shadcn Card components
 import { ScrollArea } from '../ui/scroll-area'; // Assuming shadcn ScrollArea component
 import MarkdownPreview from '@uiw/react-markdown-preview';
+import { useEffect } from 'react';
 
 type Props = {
     apiKey: string;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 const Chat = ({ apiUrl, apiKey, appId }: Props) => {
-    const { messages, input, handleSubmit, handleInputChange } = useChat({
+    const { messages, isLoading,input, handleSubmit, handleInputChange } = useChat({
         body: {
             apiKey,
             appId,
@@ -21,11 +22,19 @@ const Chat = ({ apiUrl, apiKey, appId }: Props) => {
         maxSteps: 10,
     });
 
+    // Scroll to the bottom for new messages
+    useEffect(() => {
+        const scrollArea = document.querySelector('.scroll-area') as HTMLElement;
+        if (scrollArea) {
+            scrollArea.scrollTop = scrollArea.scrollHeight;
+        }
+    }, [messages]);
+
     return (
         <Card className="w-full mx-auto flex flex-col h-full">
-            {/* <CardHeader>
+            <CardHeader>
                 <CardTitle className="text-2xl font-bold text-center">Chat</CardTitle>
-            </CardHeader> */}
+            </CardHeader>
             <CardContent className="flex-1 overflow-hidden p-0">
                 <ScrollArea className="h-full px-2 py-1">
                     {messages.length === 0 ? (
@@ -37,19 +46,20 @@ const Chat = ({ apiUrl, apiKey, appId }: Props) => {
                             <div
                                 key={index}
                                 className={`mb-3 p-2 rounded-lg max-w-[80%] ${message.role === 'user'
-                                    ? 'bg-blue-500 text-white ml-auto'
+                                    ? 'ml-auto'
                                     : 'bg-gray-200 text-gray-800 mr-auto'
                                     }`}
                             >
-                                <p className="text-sm break-words">
-                                    <MarkdownPreview key={index} style={{
+                                <p className={`break-words text-xs ${message.role === 'user' ? ' text-end ' : ' text-start '}`}>
+                                    <MarkdownPreview key={index} 
+                                    style={{
                                         background: 'transparent',
                                         padding: '0',
                                         margin: '0',
                                         color: 'inherit',
                                         transition: "all 0.3s ease-in-out"
                                     }}
-                                        className=''
+                                        className='text-xs'
                                         source={message.content || ""} />
                                 </p>
                             </div>
@@ -65,7 +75,7 @@ const Chat = ({ apiUrl, apiKey, appId }: Props) => {
                         value={input}
                         onChange={handleInputChange}
                     />
-                    <Button type="submit">Send</Button>
+                    <Button type="submit" disabled={isLoading}>Send</Button>
                 </form>
             </CardFooter>
         </Card>
